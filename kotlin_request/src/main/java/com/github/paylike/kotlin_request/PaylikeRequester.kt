@@ -26,7 +26,11 @@ class PaylikeRequester(
     /**
      * Executes a prepared request
      */
-    private suspend fun executeRequest(uri: Uri, opts: RequestOptions, request: Request): PaylikeResponse {
+    private suspend fun executeRequest(
+        uri: Uri,
+        opts: RequestOptions,
+        request: Request
+    ): PaylikeResponse {
         val op = mapOf(
             "t" to "request",
             "method" to opts.method,
@@ -50,30 +54,30 @@ class PaylikeRequester(
             else -> {
                 if (resp.status.code < 300) {
                     return PaylikeResponse(resp)
-                } else {
-                    try {
-                        val body = Json.parseToJsonElement(resp.bodyString())
-                        val exceptionErrors = mutableListOf<String>()
-                        val errors = body.jsonObject["errors"]
-                        if (errors != null && !errors.jsonArray.isEmpty()) {
-                            errors.jsonArray.forEach {
-                                exceptionErrors.add(it.jsonPrimitive.content)
-                            }
-                        }
-                        throw PaylikeException(
-                            cause = body.jsonObject["message"]!!.jsonPrimitive.content,
-                            code = body.jsonObject["code"]!!.jsonPrimitive.content,
-                            statusCode = resp.status.code,
-                            errors = exceptionErrors,
-                        )
-                    } catch (e: Exception) {
-                        throw if (e is PaylikeException) e else
-                            ServerErrorException(
-                                status = resp.status.code,
-                                headers = resp.headers
-                            )
-                    }
                 }
+                try {
+                    val body = Json.parseToJsonElement(resp.bodyString())
+                    val exceptionErrors = mutableListOf<String>()
+                    val errors = body.jsonObject["errors"]
+                    if (errors != null && !errors.jsonArray.isEmpty()) {
+                        errors.jsonArray.forEach {
+                            exceptionErrors.add(it.jsonPrimitive.content)
+                        }
+                    }
+                    throw PaylikeException(
+                        cause = body.jsonObject["message"]!!.jsonPrimitive.content,
+                        code = body.jsonObject["code"]!!.jsonPrimitive.content,
+                        statusCode = resp.status.code,
+                        errors = exceptionErrors,
+                    )
+                } catch (e: Exception) {
+                    throw if (e is PaylikeException) e else
+                        ServerErrorException(
+                            status = resp.status.code,
+                            headers = resp.headers
+                        )
+                }
+
             }
         }
     }
