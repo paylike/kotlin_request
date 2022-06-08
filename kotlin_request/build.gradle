@@ -32,7 +32,7 @@ android {
 
 dependencies {
     testImplementation 'junit:junit:4.13.2'
-
+    testImplementation group: "org.http4k", name: "http4k-server-jetty", version: "4.26.0.0"
     implementation "org.http4k:http4k-core:4.26.0.0"
     implementation "org.http4k:http4k-format-kotlinx-serialization:4.26.0.0"
     implementation "org.http4k:http4k-client-apache:4.26.0.0"

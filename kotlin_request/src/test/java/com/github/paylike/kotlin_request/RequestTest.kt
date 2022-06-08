@@ -1,20 +1,43 @@
 package com.github.paylike.kotlin_request
 
 import com.github.paylike.kotlin_request.exceptions.VersionException
-import org.http4k.core.Uri
+import kotlinx.serialization.json.*
+import org.http4k.core.*
+import org.http4k.server.Jetty
+import org.http4k.server.asServer
 import org.junit.Test
 import org.junit.Assert.*
-import java.util.function.Consumer
 
 class RequestTest {
+
     @Test
     fun paylike_requester() {
+        val app: HttpHandler = fun(req: Request): Response {
+            assertEquals(Method.POST, req.method)
+            val headers = req.headers.toMap()
+            assertEquals("1", headers.getValue("Accept-Version"))
+            assertEquals("kotlin-1", headers.getValue("X-Client"))
+            assertEquals("application/json", headers.getValue("Content-Type"))
+            val body = Json.parseToJsonElement(req.bodyString())
+            assertEquals("bar", body.jsonObject.getValue("foo").jsonPrimitive.content)
+            assertEquals("bar1", req.query("foo1"))
+            assertEquals("bar2", req.query("foo2"))
+            return Response(Status.OK)
+        }
+        val jettyServer = app.asServer(Jetty(9000)).start()
         val opts = RequestOptions(
-            query = mapOf("key1" to "value1", "key2" to "value2")
-        ,method = "POST"
-        )
+            query = mapOf("foo1" to "bar1", "foo2" to "bar2"),
+            method = "POST",
+            data = buildJsonObject {
+                put("foo", "bar")
+            })
         val requester = PaylikeRequester()
-        requester.request(endpoint = "https://random-data-api.com/api/users/random_user", opts = opts)
+        val response = requester.request(
+            endpoint = "http://localhost:9000",
+            opts = opts
+        )
+        assertEquals(200, response.response.status.code)
+        jettyServer.close()
     }
 
     @Test

@@ -115,7 +115,7 @@ class PaylikeRequester(
                 .forEach {
                     queries += encode(it, opts.query.getValue(it))
                 }
-            queries = queries.substring(0, queries.length - 2)
+            queries = queries.substring(0, queries.length - 1)
             uri = Uri.of(endpoint + queries)
         }
         val request =
