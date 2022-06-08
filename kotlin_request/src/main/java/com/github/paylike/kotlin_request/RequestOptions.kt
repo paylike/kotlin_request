@@ -9,7 +9,7 @@ import kotlin.time.toDuration
 /**
  * Describes options for a given request
  */
-class RequestOptions
+data class RequestOptions
     (
     val version: Int = 1,
     val query: Map<String, String>? = null,

@@ -1,4 +1,11 @@
 package com.github.paylike.kotlin_request
 
-class PaylikeResponse {
+import org.http4k.core.Response
+
+/**
+ * Describes a response from the Paylike API
+ */
+class PaylikeResponse(
+    val response: Response
+) {
 }
