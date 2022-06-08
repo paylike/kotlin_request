@@ -4,12 +4,20 @@ import com.github.paylike.kotlin_request.exceptions.PaylikeException
 import com.github.paylike.kotlin_request.exceptions.RateLimitException
 import com.github.paylike.kotlin_request.exceptions.ServerErrorException
 import com.github.paylike.kotlin_request.exceptions.VersionException
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.*
 import org.http4k.core.*
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import org.junit.Test
 import org.junit.Assert.*
+import java.time.LocalDateTime
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 class RequestTest {
     @Test
@@ -30,11 +38,13 @@ class RequestTest {
             formFields = mapOf("foo" to "bar")
         )
         val requester = PaylikeRequester()
-        val response = requester.request(
-            endpoint = "http://localhost:9000",
-            opts = opts
-        )
-        assertEquals(200, response.response.status.code)
+        runBlocking {
+            val response = requester.request(
+                endpoint = "http://localhost:9000",
+                opts = opts
+            )
+            assertEquals(200, response.response.status.code)
+        }
         jettyServer.close()
     }
 
@@ -56,11 +66,13 @@ class RequestTest {
             method = "GET",
         )
         val requester = PaylikeRequester()
-        val response = requester.request(
-            endpoint = "http://localhost:9000",
-            opts = opts
-        )
-        assertEquals(200, response.response.status.code)
+        runBlocking {
+            val response = requester.request(
+                endpoint = "http://localhost:9000",
+                opts = opts
+            )
+            assertEquals(200, response.response.status.code)
+        }
         jettyServer.close()
     }
 
@@ -86,11 +98,13 @@ class RequestTest {
                 put("foo", "bar")
             })
         val requester = PaylikeRequester()
-        val response = requester.request(
-            endpoint = "http://localhost:9000",
-            opts = opts
-        )
-        assertEquals(200, response.response.status.code)
+        runBlocking {
+            val response = requester.request(
+                endpoint = "http://localhost:9000",
+                opts = opts
+            )
+            assertEquals(200, response.response.status.code)
+        }
         jettyServer.close()
     }
 
@@ -109,11 +123,13 @@ class RequestTest {
         val jettyServer = app.asServer(Jetty(9000)).start()
         val opts = RequestOptions()
         val requester = PaylikeRequester()
-        val response = requester.request(
-            endpoint = "http://localhost:9000",
-            opts = opts
-        )
-        assertEquals(200, response.response.status.code)
+        runBlocking {
+            val response = requester.request(
+                endpoint = "http://localhost:9000",
+                opts = opts
+            )
+            assertEquals(200, response.response.status.code)
+        }
         jettyServer.close()
     }
 
@@ -128,10 +144,40 @@ class RequestTest {
         val opts = RequestOptions()
         val requester = PaylikeRequester()
         assertThrows(RateLimitException::class.java) {
-            requester.request(
-                endpoint = "http://localhost:9000",
-                opts = opts
-            )
+            runBlocking {
+                requester.request(
+                    endpoint = "http://localhost:9000",
+                    opts = opts
+                )
+            }
+
+        }
+        jettyServer.close()
+    }
+
+    @Test
+    fun paylike_requester_timeout() {
+        val ch = Channel<Int>()
+        val app: HttpHandler = fun(_: Request): Response {
+            runBlocking {
+                delay(4.toDuration(DurationUnit.SECONDS))
+                ch.send(0)
+            }
+            return Response(Status.OK)
+        }
+        val jettyServer = app.asServer(Jetty(9000)).start()
+        val opts = RequestOptions(timeout = 2.toDuration(DurationUnit.SECONDS))
+        val requester = PaylikeRequester()
+        assertThrows(TimeoutCancellationException::class.java) {
+            runBlocking {
+                requester.request(
+                    endpoint = "http://localhost:9000",
+                    opts = opts,
+                )
+            }
+        }
+        runBlocking {
+            ch.receive()
         }
         jettyServer.close()
     }
@@ -153,10 +199,13 @@ class RequestTest {
         val opts = RequestOptions()
         val requester = PaylikeRequester()
         assertThrows(PaylikeException::class.java) {
-            requester.request(
-                endpoint = "http://localhost:9000",
-                opts = opts
-            )
+            runBlocking {
+                requester.request(
+                    endpoint = "http://localhost:9000",
+                    opts = opts
+                )
+            }
+
         }
         jettyServer.close()
     }
@@ -172,10 +221,12 @@ class RequestTest {
         val opts = RequestOptions()
         val requester = PaylikeRequester()
         assertThrows(ServerErrorException::class.java) {
-            requester.request(
-                endpoint = "http://localhost:9000",
-                opts = opts
-            )
+            runBlocking {
+                requester.request(
+                    endpoint = "http://localhost:9000",
+                    opts = opts
+                )
+            }
         }
         jettyServer.close()
     }

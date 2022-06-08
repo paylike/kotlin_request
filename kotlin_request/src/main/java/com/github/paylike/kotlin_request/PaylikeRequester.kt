@@ -1,6 +1,8 @@
 package com.github.paylike.kotlin_request
 
 import com.github.paylike.kotlin_request.exceptions.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
 import org.http4k.asByteBuffer
@@ -24,7 +26,7 @@ class PaylikeRequester(
     /**
      * Executes a prepared request
      */
-    private fun executeRequest(uri: Uri, opts: RequestOptions, request: Request): PaylikeResponse {
+    private suspend fun executeRequest(uri: Uri, opts: RequestOptions, request: Request): PaylikeResponse {
         val op = mapOf(
             "t" to "request",
             "method" to opts.method,
@@ -34,7 +36,12 @@ class PaylikeRequester(
             "formFields" to opts.formFields,
         )
         log.accept(op)
-        val resp = client(request)
+        val execute = CoroutineScope(IO).async {
+            client(request)
+        }
+        val resp = withTimeout(opts.timeout) {
+            execute.await()
+        }
         return when (resp.status.code) {
             200 -> PaylikeResponse(resp)
             429 -> {
@@ -85,9 +92,10 @@ class PaylikeRequester(
      * @throws RateLimitException when the API indicates limitation
      * @throws PaylikeException when the API throws a known error
      * @throws ServerErrorException when the API responds with unexpected response
+     * @throws TimeoutCancellationException when the API does not respond in the given time
      * @throws Exception when an invalid usage is detected (e.g. sending form without formFields)
      */
-    fun request(endpoint: String, opts: RequestOptions): PaylikeResponse {
+    suspend fun request(endpoint: String, opts: RequestOptions): PaylikeResponse {
         // val printingClient: HttpHandler = DebuggingFilters.PrintResponse().then(client)
         var uri = Uri.of(endpoint)
         val headers =
