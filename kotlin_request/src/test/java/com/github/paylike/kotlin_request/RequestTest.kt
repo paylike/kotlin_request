@@ -1,5 +1,8 @@
 package com.github.paylike.kotlin_request
 
+import com.github.paylike.kotlin_request.exceptions.PaylikeException
+import com.github.paylike.kotlin_request.exceptions.RateLimitException
+import com.github.paylike.kotlin_request.exceptions.ServerErrorException
 import com.github.paylike.kotlin_request.exceptions.VersionException
 import kotlinx.serialization.json.*
 import org.http4k.core.*
@@ -92,9 +95,95 @@ class RequestTest {
     }
 
     @Test
+    fun paylike_requester_auto_retry() {
+        var retried = false
+        val app: HttpHandler = fun(_: Request): Response {
+            if (retried) {
+                return Response(Status.OK)
+            }
+            retried = true
+            return Response(
+                Status.TOO_MANY_REQUESTS
+            ).headers(listOf("retry-after" to "1"))
+        }
+        val jettyServer = app.asServer(Jetty(9000)).start()
+        val opts = RequestOptions()
+        val requester = PaylikeRequester()
+        val response = requester.request(
+            endpoint = "http://localhost:9000",
+            opts = opts
+        )
+        assertEquals(200, response.response.status.code)
+        jettyServer.close()
+    }
+
+    @Test
+    fun paylike_requester_rate_limit() {
+        val app: HttpHandler = fun(_: Request): Response {
+            return Response(
+                Status.TOO_MANY_REQUESTS
+            )
+        }
+        val jettyServer = app.asServer(Jetty(9000)).start()
+        val opts = RequestOptions()
+        val requester = PaylikeRequester()
+        assertThrows(RateLimitException::class.java) {
+            requester.request(
+                endpoint = "http://localhost:9000",
+                opts = opts
+            )
+        }
+        jettyServer.close()
+    }
+
+    @Test
+    fun paylike_requester_paylike_exception() {
+        val app: HttpHandler = fun(_: Request): Response {
+            return Response(
+                Status.BAD_REQUEST
+            ).body(Body(buildJsonObject {
+                put("message", "foo")
+                put("code", "FOO")
+                put("errors", buildJsonArray {
+                    add("bar")
+                })
+            }.toString()))
+        }
+        val jettyServer = app.asServer(Jetty(9000)).start()
+        val opts = RequestOptions()
+        val requester = PaylikeRequester()
+        assertThrows(PaylikeException::class.java) {
+            requester.request(
+                endpoint = "http://localhost:9000",
+                opts = opts
+            )
+        }
+        jettyServer.close()
+    }
+
+    @Test
+    fun paylike_requester_server_error() {
+        val app: HttpHandler = fun(_: Request): Response {
+            return Response(
+                Status.INTERNAL_SERVER_ERROR
+            ).headers(listOf("foo" to "bar"))
+        }
+        val jettyServer = app.asServer(Jetty(9000)).start()
+        val opts = RequestOptions()
+        val requester = PaylikeRequester()
+        assertThrows(ServerErrorException::class.java) {
+            requester.request(
+                endpoint = "http://localhost:9000",
+                opts = opts
+            )
+        }
+        jettyServer.close()
+    }
+
+    @Test
     fun request_options() {
         assertThrows(VersionException::class.java) {
             RequestOptions(version = 0)
-        };
+        }
     }
 }

@@ -38,8 +38,7 @@ class PaylikeRequester(
         return when (resp.status.code) {
             200 -> PaylikeResponse(resp)
             429 -> {
-                val retryHeader = resp.headers.findSingle("retry-after")
-                throw RateLimitException(retryHeader)
+                throw RateLimitException()
             }
             else -> {
                 if (resp.status.code < 300) {
