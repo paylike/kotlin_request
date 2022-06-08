@@ -8,6 +8,7 @@ import kotlin.time.toDuration
 
 /**
  * Describes options for a given request
+ * @throws VersionException if the version is below 1
  */
 data class RequestOptions
     (

@@ -6,5 +6,4 @@ package com.github.paylike.kotlin_request.exceptions
 class ServerErrorException(
     val status: Int?,
     val headers: List<Pair<String, String?>> = emptyList()
-) : Exception("Unexpected server error") {
-}
+) : Exception("Unexpected server error")

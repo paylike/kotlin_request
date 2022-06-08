@@ -83,17 +83,13 @@ class PaylikeRequester(
     /**
      * Executes a request based on parameters towards an endpoint
      * @return Response wrapped in a utility class
-     * @throws RateLimitException
-     * @throws PaylikeException
-     * @throws ServerErrorException
-     * @throws VersionException
-     * @throws Exception
+     * @throws RateLimitException when the API indicates limitation
+     * @throws PaylikeException when the API throws a known error
+     * @throws ServerErrorException when the API responds with unexpected response
+     * @throws Exception when an invalid usage is detected (e.g. sending form without formFields)
      */
     fun request(endpoint: String, opts: RequestOptions): PaylikeResponse {
         // val printingClient: HttpHandler = DebuggingFilters.PrintResponse().then(client)
-        if (opts.version < 1) {
-            throw VersionException(opts.version)
-        }
         var uri = Uri.of(endpoint)
         val headers =
             mutableListOf(

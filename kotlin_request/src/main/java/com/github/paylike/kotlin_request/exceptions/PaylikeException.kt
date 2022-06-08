@@ -8,5 +8,4 @@ class PaylikeException(
     val code: String,
     val statusCode: Int,
     val errors: List<String>
-) : Exception(cause) {
-}
+) : Exception(cause)
