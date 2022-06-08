@@ -32,6 +32,10 @@ android {
 
 dependencies {
     testImplementation 'junit:junit:4.13.2'
+
+    implementation "org.http4k:http4k-core:4.26.0.0"
+    implementation "org.http4k:http4k-format-kotlinx-serialization:4.26.0.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21"
 }
 
 afterEvaluate {
