@@ -12,7 +12,6 @@ import org.http4k.length
 import org.http4k.urlEncoded
 import java.net.URLEncoder
 import java.util.function.Consumer
-import kotlin.coroutines.Continuation
 
 /**
  * Used for executing requests towards the Paylike API
@@ -31,7 +30,7 @@ class PaylikeRequester(
         uri: Uri,
         opts: RequestOptions,
         request: Request
-    ): PaylikeResponse {
+    ): Response {
         val op = mapOf(
             "t" to "request",
             "method" to opts.method,
@@ -48,13 +47,13 @@ class PaylikeRequester(
             execute.await()
         }
         return when (resp.status.code) {
-            200 -> PaylikeResponse(resp)
+            200 -> resp
             429 -> {
                 throw RateLimitException()
             }
             else -> {
                 if (resp.status.code < 300) {
-                    return PaylikeResponse(resp)
+                    return resp
                 }
                 try {
                     val body = Json.parseToJsonElement(resp.bodyString())
@@ -100,7 +99,7 @@ class PaylikeRequester(
      * @throws TimeoutCancellationException when the API does not respond in the given time
      * @throws Exception when an invalid usage is detected (e.g. sending form without formFields)
      */
-    suspend fun request(endpoint: String, opts: RequestOptions): PaylikeResponse {
+    suspend fun request(endpoint: String, opts: RequestOptions): Response {
         // val printingClient: HttpHandler = DebuggingFilters.PrintResponse().then(client)
         var uri = Uri.of(endpoint)
         val headers =

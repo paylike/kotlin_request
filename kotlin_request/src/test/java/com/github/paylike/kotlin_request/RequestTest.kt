@@ -41,7 +41,7 @@ class RequestTest {
                 endpoint = "http://localhost:9000",
                 opts = opts
             )
-            assertEquals(200, response.response.status.code)
+            assertEquals(200, response.status.code)
         }
         jettyServer.close()
     }
@@ -69,7 +69,7 @@ class RequestTest {
                 endpoint = "http://localhost:9000",
                 opts = opts
             )
-            assertEquals(200, response.response.status.code)
+            assertEquals(200, response.status.code)
         }
         jettyServer.close()
     }
@@ -101,7 +101,7 @@ class RequestTest {
                 endpoint = "http://localhost:9000",
                 opts = opts
             )
-            assertEquals(200, response.response.status.code)
+            assertEquals(200, response.status.code)
         }
         jettyServer.close()
     }
@@ -126,7 +126,7 @@ class RequestTest {
                 endpoint = "http://localhost:9000",
                 opts = opts
             )
-            assertEquals(200, response.response.status.code)
+            assertEquals(200, response.status.code)
         }
         jettyServer.close()
     }
