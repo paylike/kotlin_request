@@ -12,6 +12,7 @@ import org.http4k.length
 import org.http4k.urlEncoded
 import java.net.URLEncoder
 import java.util.function.Consumer
+import kotlin.coroutines.Continuation
 
 /**
  * Used for executing requests towards the Paylike API

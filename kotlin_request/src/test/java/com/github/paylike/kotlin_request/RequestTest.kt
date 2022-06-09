@@ -4,7 +4,6 @@ import com.github.paylike.kotlin_request.exceptions.PaylikeException
 import com.github.paylike.kotlin_request.exceptions.RateLimitException
 import com.github.paylike.kotlin_request.exceptions.ServerErrorException
 import com.github.paylike.kotlin_request.exceptions.VersionException
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -15,7 +14,6 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import org.junit.Test
 import org.junit.Assert.*
-import java.time.LocalDateTime
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
