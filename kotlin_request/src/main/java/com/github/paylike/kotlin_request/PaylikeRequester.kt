@@ -100,7 +100,6 @@ class PaylikeRequester(
      * @throws Exception when an invalid usage is detected (e.g. sending form without formFields)
      */
     suspend fun request(endpoint: String, opts: RequestOptions): Response {
-        // val printingClient: HttpHandler = DebuggingFilters.PrintResponse().then(client)
         var uri = Uri.of(endpoint)
         val headers =
             mutableListOf(
