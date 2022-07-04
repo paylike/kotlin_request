@@ -29,7 +29,6 @@ hs_err_pid*
 
 # Ignore Gradle project-specific cache directory
 .gradle
-!gradle/wrapper/gradle-wrapper.jar
 
 # Ignore Gradle build output directory
 build/
@@ -60,6 +59,3 @@ google-services.json
 
 # Android Profiling
 *.hprof
-
-# Ignore Gradle build output directory
-build
