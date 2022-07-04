@@ -17,7 +17,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -36,7 +36,7 @@ dependencies {
     implementation "org.http4k:http4k-core:4.26.0.0"
     implementation "org.http4k:http4k-format-kotlinx-serialization:4.26.0.0"
     implementation "org.http4k:http4k-client-apache:4.26.0.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
 }
 
@@ -48,7 +48,7 @@ afterEvaluate {
 
                 groupId = 'com.github.paylike'
                 artifactId = 'kotlin_request'
-                version = '1.0.0'
+                version = '1.0.1'
             }
         }
     }
