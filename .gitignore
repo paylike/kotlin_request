@@ -31,7 +31,7 @@ hs_err_pid*
 .gradle
 
 # Ignore Gradle build output directory
-build/
+build
 
 # Local configuration file (sdk path, etc)
 local.properties
