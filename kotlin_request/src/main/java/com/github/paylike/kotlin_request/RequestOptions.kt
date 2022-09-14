@@ -1,13 +1,11 @@
 package com.github.paylike.kotlin_request
 
 import com.github.paylike.kotlin_request.exceptions.VersionException
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.buildJsonObject
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
 
 /**
  * Describes options for a given request
@@ -25,7 +23,7 @@ data class RequestOptions(
 ) {
     init {
         if (version < 1) {
-            throw VersionException(version);
+            throw VersionException(version)
         }
     }
 }
