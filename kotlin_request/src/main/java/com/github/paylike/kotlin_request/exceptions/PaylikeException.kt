@@ -1,8 +1,6 @@
 package com.github.paylike.kotlin_request.exceptions
 
-/**
- * Describes a known error received from the server
- */
+/** Describes a known error received from the server */
 class PaylikeException(
     cause: String,
     val code: String,

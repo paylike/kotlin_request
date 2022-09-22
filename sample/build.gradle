@@ -1,36 +1,51 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+	id 'com.android.application'
+	id 'org.jetbrains.kotlin.android'
+	id 'com.diffplug.spotless' version '6.8.0'
 }
 
 android {
-    compileSdk 32
-
-    defaultConfig {
-        applicationId "com.github.paylike.sample"
-        minSdk 26
-        targetSdk 32
-        versionCode 1
-        versionName "1.0"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-    }
+	compileSdk 32
+	defaultConfig {
+		applicationId "com.github.paylike.sample"
+		minSdk 26
+		targetSdk 32
+		versionCode 1
+		versionName "1.0"
+	}
+	buildTypes {
+		release {
+			minifyEnabled false
+		}
+	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+	kotlinOptions {
+		jvmTarget = '1.8'
+	}
+	packagingOptions {
+		exclude 'META-INF/DEPENDENCIES'
+	}
 }
 
 dependencies {
-    implementation project(path: ':kotlin_request')
+	implementation project(':kotlin_request')
 }
+
+spotless {
+	kotlin {
+		target 'src/**/*.kt', 'src/**/*.kts'
+		ktfmt().kotlinlangStyle()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	groovyGradle {
+		target '*.gradle'
+		greclipse()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+}
+build.dependsOn 'spotlessApply'

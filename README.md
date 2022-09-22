@@ -1,8 +1,12 @@
-# kotlin_request - Paylike low-level request helper
-Request implementation for Kotlin
+# Paylike's low-level request implementation in kotlin
+
+Request helper for Kotlin
 
 <a href="https://jitpack.io/#paylike/kotlin_request" target="_blank">
     <img src="https://jitpack.io/v/paylike/kotlin_request.svg" />
+</a>
+<a href="https://github.com/kocsislaci/kotlin-request/actions/workflows/AssembleOnMain.yml" target="_blank">
+    <img src="https://github.com/kocsislaci/kotlin-request/actions/workflows/AssembleOnMain.yml/badge.svg?branch=main" />
 </a>
 
 *This implementation is based on [Paylike/JS-Request](https://github.com/paylike/js-request)*

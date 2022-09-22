@@ -1,52 +1,67 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.30'
-    id 'maven-publish'
+	id 'com.android.library'
+	id 'org.jetbrains.kotlin.android'
+	id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.30'
+	id 'maven-publish'
+	id 'com.diffplug.spotless' version '6.8.0'
 }
 
 android {
-    compileSdk 32
-
-    defaultConfig {
-        minSdk 26
-        targetSdk 32
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+	compileSdk 32
+	defaultConfig {
+		minSdk 26
+		targetSdk 32
+	}
+	buildTypes {
+		release {
+			minifyEnabled false
+		}
+	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+	kotlinOptions {
+		jvmTarget = '1.8'
+	}
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation group: "org.http4k", name: "http4k-server-jetty", version: "4.26.0.0"
-    api "org.http4k:http4k-core:4.26.0.0"
-    api "org.http4k:http4k-format-kotlinx-serialization:4.26.0.0"
-    api "org.http4k:http4k-client-apache:4.26.0.0"
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
+	testImplementation 'junit:junit:4.13.2'
+	testImplementation group: "org.http4k", name: "http4k-server-jetty", version: "4.26.0.0"
+	api "org.http4k:http4k-core:4.26.0.0"
+	api "org.http4k:http4k-format-kotlinx-serialization:4.26.0.0"
+	api "org.http4k:http4k-client-apache:4.26.0.0"
+	api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0"
+	api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
+spotless {
+	kotlin {
+		target 'src/**/*.kt', 'src/**/*.kts'
+		ktfmt().kotlinlangStyle()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	groovyGradle {
+		target '*.gradle'
+		greclipse()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+}
+build.dependsOn 'spotlessApply'
 
-                groupId = 'com.github.paylike'
-                artifactId = 'kotlin_request'
-                version = '1.0.2'
-            }
-        }
-    }
+afterEvaluate {
+	publishing {
+		publications {
+			release(MavenPublication) {
+				from components.release
+
+				groupId = 'com.github.paylike'
+				artifactId = 'kotlin_request'
+				version = '1.0.3'
+			}
+		}
+	}
 }
