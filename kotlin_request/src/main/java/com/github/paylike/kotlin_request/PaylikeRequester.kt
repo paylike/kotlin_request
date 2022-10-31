@@ -1,12 +1,21 @@
 package com.github.paylike.kotlin_request
 
-import com.github.paylike.kotlin_request.exceptions.*
+import com.github.paylike.kotlin_request.exceptions.PaylikeException
+import com.github.paylike.kotlin_request.exceptions.RateLimitException
+import com.github.paylike.kotlin_request.exceptions.ServerErrorException
+import com.github.paylike.kotlin_request.exceptions.apistatuscodes.ApiCodesEnum
 import java.net.URLEncoder
 import java.util.function.Consumer
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.http4k.asByteBuffer
 import org.http4k.client.ApacheClient
 import org.http4k.core.*
@@ -51,7 +60,11 @@ class PaylikeRequester(
                     }
                     throw PaylikeException(
                         cause = body.jsonObject["message"]!!.jsonPrimitive.content,
-                        code = body.jsonObject["code"]!!.jsonPrimitive.content,
+                        code =
+                            ApiCodesEnum.values().find {
+                                it.toString() == body.jsonObject["code"]!!.jsonPrimitive.content
+                            }
+                                ?: ApiCodesEnum.INTERNAL_ERROR,
                         statusCode = resp.status.code,
                         errors = exceptionErrors,
                     )
