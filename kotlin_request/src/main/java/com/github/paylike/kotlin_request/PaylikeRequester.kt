@@ -3,7 +3,7 @@ package com.github.paylike.kotlin_request
 import com.github.paylike.kotlin_request.exceptions.PaylikeException
 import com.github.paylike.kotlin_request.exceptions.RateLimitException
 import com.github.paylike.kotlin_request.exceptions.ServerErrorException
-import com.github.paylike.kotlin_request.exceptions.apistatuscodes.ApiCodesEnum
+import com.github.paylike.kotlin_request.exceptions.api.ApiCodes
 import java.net.URLEncoder
 import java.util.function.Consumer
 import kotlinx.coroutines.CoroutineScope
@@ -61,10 +61,10 @@ class PaylikeRequester(
                     throw PaylikeException(
                         cause = body.jsonObject["message"]!!.jsonPrimitive.content,
                         code =
-                            ApiCodesEnum.values().find {
+                            ApiCodes.values().find {
                                 it.toString() == body.jsonObject["code"]!!.jsonPrimitive.content
                             }
-                                ?: ApiCodesEnum.INTERNAL_ERROR,
+                                ?: ApiCodes.INTERNAL_ERROR,
                         statusCode = resp.status.code,
                         errors = exceptionErrors,
                     )

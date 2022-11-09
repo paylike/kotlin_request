@@ -1,6 +1,6 @@
-package com.github.paylike.kotlin_request.exceptions.apistatuscodes
+package com.github.paylike.kotlin_request.exceptions.api
 
-enum class ApiCodesEnum {
+enum class ApiCodes {
     INTERNAL_ERROR,
     ENDPOINT_NOT_FOUND,
     VERSION_MISSING,
