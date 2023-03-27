@@ -48,4 +48,4 @@ spotless {
 		endWithNewline()
 	}
 }
-build.dependsOn 'spotlessApply'
+build.dependsOn 'spotlessCheck'
