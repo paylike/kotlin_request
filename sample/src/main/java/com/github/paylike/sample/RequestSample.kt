@@ -20,7 +20,7 @@ fun main() {
         )
     runBlocking {
         try {
-            val response = requester.request("http://your_domain.com", opts)
+            requester.request("http://your_domain.com", opts) // -> Response
         } catch (e: TimeoutCancellationException) {
             /** Handle timeout */
         } catch (e: PaylikeException) {

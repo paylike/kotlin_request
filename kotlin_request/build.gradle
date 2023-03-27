@@ -1,16 +1,16 @@
 plugins {
 	id 'com.android.library'
 	id 'org.jetbrains.kotlin.android'
-	id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.30'
+	id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.10'
 	id 'maven-publish'
 	id 'com.diffplug.spotless' version '6.8.0'
 }
 
 android {
-	compileSdk 32
+	compileSdk 33
 	defaultConfig {
 		minSdk 26
-		targetSdk 32
+		targetSdk 33
 	}
 	buildTypes {
 		release {
@@ -28,11 +28,11 @@ android {
 
 dependencies {
 	testImplementation 'junit:junit:4.13.2'
-	testImplementation group: "org.http4k", name: "http4k-server-jetty", version: "4.26.0.0"
-	api "org.http4k:http4k-core:4.26.0.0"
-	api "org.http4k:http4k-format-kotlinx-serialization:4.26.0.0"
-	api "org.http4k:http4k-client-apache:4.26.0.0"
-	api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0"
+	testImplementation group: "org.http4k", name: "http4k-server-jetty", version: '4.41.1.1'
+	api 'org.http4k:http4k-core:4.41.1.1'
+	api 'org.http4k:http4k-format-kotlinx-serialization:4.41.1.1'
+	api 'org.http4k:http4k-client-apache:4.41.1.1'
+	api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10"
 	api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
 }
 
@@ -60,7 +60,7 @@ afterEvaluate {
 
 				groupId = 'com.github.paylike'
 				artifactId = 'kotlin_request'
-				version = '1.0.4'
+				version = '1.0.5'
 			}
 		}
 	}
