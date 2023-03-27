@@ -5,8 +5,8 @@ Request helper for Kotlin
 <a href="https://jitpack.io/#paylike/kotlin_request" target="_blank">
     <img src="https://jitpack.io/v/paylike/kotlin_request.svg" />
 </a>
-<a href="https://github.com/kocsislaci/kotlin-request/actions/workflows/AssembleOnMain.yml" target="_blank">
-    <img src="https://github.com/kocsislaci/kotlin-request/actions/workflows/AssembleOnMain.yml/badge.svg?branch=main" />
+<a href="/../../actions/workflows/AssembleOnMain.yml" target="_blank">
+    <img src="/../../actions/workflows/AssembleOnMain.yml/badge.svg?branch=main" />
 </a>
 
 *This implementation is based on [Paylike/JS-Request](https://github.com/paylike/js-request)*
