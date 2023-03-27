@@ -33,7 +33,7 @@ dependencies {
 	api 'org.http4k:http4k-format-kotlinx-serialization:4.41.1.1'
 	api 'org.http4k:http4k-client-apache:4.41.1.1'
 	api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10"
-	api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2"
+	api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 }
 
 spotless {
